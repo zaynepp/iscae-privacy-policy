@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Processing LinkedIn Login...</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; padding: 50px; }
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid #0077b5; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 30px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <h2>Processing your LinkedIn login...</h2>
+    <div class="loader"></div>
+    <p id="message">Please wait while we connect to your profile.</p>
+
+    <script>
+        // Extract the authorization code from the URL [citation:2][citation:5]
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+
+        // Check for errors from LinkedIn first
+        if (error) {
+            document.getElementById('message').innerHTML = `Login failed: ${error}. <a href="index.html">Go back</a>`;
+            console.error('LinkedIn OAuth error:', error);
+        } 
+        // Check if we have the required authorization code
+        else if (authCode) {
+            document.getElementById('message').textContent = 'Authorization successful! Fetching your profile data...';
+            
+            // In a full implementation, you would send this code to YOUR SERVER
+            // to securely exchange it for an access token using your Client Secret [citation:10].
+            console.log('Authorization Code Received:', authCode);
+            
+            // For a front-end prototype, you can store the code and redirect back
+            sessionStorage.setItem('linkedin_auth_code', authCode);
+            
+            // Redirect back to the main application after a short delay
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } 
+        else {
+            document.getElementById('message').innerHTML = 'No authorization data received. <a href="index.html">Go back</a>';
+        }
+    </script>
+</body>
+</html>
