@@ -1,44 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>ISCAE Privacy Policy</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISCAE - Synchronisation LinkedIn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- (Keep the full CSS styles from the previous interface here) -->
     <style>
-        body { 
-            font-family: Arial; 
-            background: #f0f7ff; 
-            padding: 40px; 
-            text-align: center; 
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0,51,102,0.1);
-            border-left: 10px solid #003366;
-        }
-        h1 { color: #003366; }
-        h2 { color: #00509e; margin-top: 30px; }
-        .logo { color: #d4af37; font-size: 3rem; }
+        /* All CSS styles from the previous answer go here */
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">🏛️</div>
-        <h1>ISCAE - Politique de Confidentialité</h1>
-        <p><strong>Plateforme Intelligente de Stages</strong></p>
-        <p>URL valide pour l'intégration LinkedIn API</p>
-        
-        <h2>🔒 Protection des Données</h2>
-        <p>Cette application respecte la confidentialité des données étudiants.</p>
-        
-        <h2>🎓 Contexte Académique</h2>
-        <p>Projet de démonstration - ISCAE 2024</p>
-        
-        <p style="margin-top: 40px; color: #666;">
-            © 2024 ISCAE - Institut Supérieur de Commerce et d'Administration des Entreprises
-        </p>
-    </div>
+    <!-- (Keep the full HTML body structure from the previous answer here) -->
+    <header>...</header>
+    <div class="container">...</div>
+    <footer>...</footer>
+
+    <script>
+        // UPDATED CONFIGURATION WITH YOUR CREDENTIALS
+        const LINKEDIN_CONFIG = {
+            clientId: '78s9n6o52y1sq3', // ⬅️ YOUR CLIENT ID HERE
+            redirectUri: 'https://zaynepp.github.io/iscae-privacy-policy/linkedin-callback.html', // ⬅️ YOUR GITHUB PAGES CALLBACK
+            scope: 'r_liteprofile r_emailaddress', // Basic profile and email permissions
+            authUrl: 'https://www.linkedin.com/oauth/v2/authorization'
+        };
+
+        // The JavaScript for login, profile display, etc., remains the same.
+        // The function to initiate the real LinkedIn login becomes:
+        function loginWithLinkedInReal() {
+            // Construct the OAuth 2.0 authorization URL [citation:10]
+            const state = 'iscae_state_' + Math.random().toString(36).substring(7);
+            localStorage.setItem('linkedin_oauth_state', state);
+            
+            const authUrl = `${LINKEDIN_CONFIG.authUrl}?response_type=code&client_id=${LINKEDIN_CONFIG.clientId}&redirect_uri=${encodeURIComponent(LINKEDIN_CONFIG.redirectUri)}&state=${state}&scope=${encodeURIComponent(LINKEDIN_CONFIG.scope)}`;
+            
+            // Redirect the user to LinkedIn for authentication
+            window.location.href = authUrl;
+        }
+
+        // Modify the login button in your HTML to call this new function
+        // linkedinLoginBtn.addEventListener('click', loginWithLinkedInReal);
+    </script>
 </body>
 </html>
