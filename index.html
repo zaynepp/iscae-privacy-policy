@@ -5,41 +5,724 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ISCAE - Synchronisation LinkedIn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- (Keep the full CSS styles from the previous interface here) -->
     <style>
-        /* All CSS styles from the previous answer go here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --iscae-blue: #1a365d;
+            --iscae-light-blue: #2d5aa0;
+            --linkedin-blue: #0077b5;
+            --iscae-gold: #d4af37;
+            --iscae-light-gray: #f5f7fa;
+            --iscae-dark-gray: #4a5568;
+        }
+
+        body {
+            background-color: var(--iscae-light-gray);
+            color: var(--iscae-dark-gray);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--iscae-blue) 0%, var(--iscae-light-blue) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-accent {
+            color: var(--iscae-gold);
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-top: 0.2rem;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--iscae-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--iscae-blue);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .linkedin-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            text-align: center;
+            border-top: 5px solid var(--linkedin-blue);
+        }
+
+        .linkedin-icon {
+            font-size: 4rem;
+            color: var(--linkedin-blue);
+            margin-bottom: 1.5rem;
+        }
+
+        .linkedin-card h2 {
+            color: var(--iscae-blue);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .linkedin-card p {
+            color: var(--iscae-dark-gray);
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-linkedin {
+            background-color: var(--linkedin-blue);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+        }
+
+        .btn-linkedin:hover {
+            background-color: #005582;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 119, 181, 0.3);
+        }
+
+        .profile-section {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--iscae-light-gray);
+        }
+
+        .profile-info h3 {
+            color: var(--iscae-blue);
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info .headline {
+            color: var(--iscae-dark-gray);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .profile-info .location {
+            color: var(--iscae-dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skills-section {
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            color: var(--iscae-blue);
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .skill-tag {
+            background: #e6f0ff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            color: var(--iscae-blue);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .experience-item {
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item:hover {
+            border-color: var(--iscae-light-blue);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .experience-title {
+            color: var(--iscae-blue);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .experience-company {
+            color: var(--linkedin-blue);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .experience-duration {
+            color: var(--iscae-dark-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .experience-description {
+            color: var(--iscae-dark-gray);
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--iscae-light-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--iscae-blue);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--iscae-light-blue);
+            color: var(--iscae-light-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: #e6f0ff;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--linkedin-blue);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
+            background-color: var(--iscae-blue);
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- (Keep the full HTML body structure from the previous answer here) -->
-    <header>...</header>
-    <div class="container">...</div>
-    <footer>...</footer>
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap" style="font-size: 2.5rem; color: var(--iscae-blue);"></i>
+                </div>
+                <div>
+                    <div class="logo-text">ISCAE<span class="logo-accent">.</span></div>
+                    <div class="subtitle">Synchronisation LinkedIn - Base de Données Stage</div>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar" id="userInitial">?</div>
+                <div>
+                    <div id="userName" style="font-weight: 600;">Non connecté</div>
+                    <div id="userRole" style="font-size: 0.85rem; opacity: 0.9;">Connectez-vous avec LinkedIn</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="linkedin-card" id="loginCard">
+            <i class="fab fa-linkedin linkedin-icon"></i>
+            <h2>Synchronisez votre profil LinkedIn</h2>
+            <p>
+                Connectez-vous avec votre compte LinkedIn pour importer automatiquement vos informations professionnelles, 
+                compétences et expériences dans la base de données des stages de l'ISCAE. Cela nous permettra de mieux 
+                vous accompagner dans votre recherche de stage et votre orientation professionnelle.
+            </p>
+            
+            <button class="btn-linkedin" id="linkedinLoginBtn">
+                <i class="fab fa-linkedin"></i>
+                Se connecter avec LinkedIn
+            </button>
+            
+            <div class="loader" id="loginLoader"></div>
+            
+            <div style="margin-top: 2rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                <p style="font-size: 0.9rem; color: #666; margin: 0;">
+                    <i class="fas fa-shield-alt"></i> <strong>Mode Démo Activé :</strong> Cliquez sur le bouton pour voir une simulation complète de l'interface avec des données de démonstration. Pour une connexion réelle à l'API LinkedIn, un backend supplémentaire est requis.
+                </p>
+            </div>
+        </div>
+
+        <div class="profile-section" id="profileSection">
+            <div class="profile-header">
+                <img id="profilePicture" src="" alt="Photo de profil" class="profile-pic">
+                <div class="profile-info">
+                    <h3 id="fullName">Nom Prénom</h3>
+                    <div class="headline" id="headline">Titre professionnel</div>
+                    <div class="location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="location">Localisation</span>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" id="updateProfileBtn">
+                            <i class="fas fa-sync-alt"></i>
+                            Mettre à jour depuis LinkedIn
+                        </button>
+                        <button class="btn btn-outline" id="disconnectBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Se déconnecter
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skills-section">
+                <h3 class="section-title">Compétences LinkedIn</h3>
+                <div class="skills-grid" id="skillsContainer">
+                </div>
+            </div>
+
+            <div class="skills-section">
+                <h3 class="section-title">Expériences professionnelles</h3>
+                <div id="experienceContainer">
+                </div>
+            </div>
+
+            <div class="skills-section">
+                <h3 class="section-title">Synchronisation avec ISCAE</h3>
+                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                    <h4 style="color: var(--iscae-blue); margin-bottom: 1rem;">Mettre à jour votre profil étudiant</h4>
+                    <p style="margin-bottom: 1.5rem;">
+                        Vos informations LinkedIn seront utilisées pour enrichir votre profil dans la base de données des stages de l'ISCAE.
+                    </p>
+                    
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="syncWithISCAE">
+                            <i class="fas fa-database"></i>
+                            Synchroniser avec la base ISCAE
+                        </button>
+                        <button class="btn btn-outline" id="viewProfileBtn">
+                            <i class="fas fa-eye"></i>
+                            Voir mon profil ISCAE
+                        </button>
+                    </div>
+                    
+                    <div id="syncStatus" style="margin-top: 1rem; padding: 0.8rem; border-radius: 6px; display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2024 ISCAE - Synchronisation LinkedIn (Version de démonstration).
+            </div>
+            <div class="footer-links">
+                <a href="#">Confidentialité</a>
+                <a href="#">Conditions d'utilisation</a>
+                <a href="https://developer.linkedin.com/" target="_blank">API LinkedIn</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // UPDATED CONFIGURATION WITH YOUR CREDENTIALS
-        const LINKEDIN_CONFIG = {
-            clientId: '78s9n6o52y1sq3', // ⬅️ YOUR CLIENT ID HERE
-            redirectUri: 'https://zaynepp.github.io/iscae-privacy-policy/linkedin-callback.html', // ⬅️ YOUR GITHUB PAGES CALLBACK
-            scope: 'r_liteprofile r_emailaddress', // Basic profile and email permissions
-            authUrl: 'https://www.linkedin.com/oauth/v2/authorization'
+        // DONNÉES DE DÉMONSTRATION
+        const DEMO_PROFILE = {
+            id: 'demo-user-12345',
+            firstName: 'Ahmed',
+            lastName: 'Benali',
+            profilePicture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80',
+            headline: 'Étudiant en Master Finance à l\'ISCAE | Recherche de stage',
+            location: 'Casablanca, Maroc',
+            skills: ['Analyse financière', 'Excel avancé', 'Python', 'Gestion de portefeuille', 'Comptabilité', 'Finance d\'entreprise', 'Tableau', 'PowerPoint'],
+            experiences: [
+                {
+                    title: 'Assistant analyste financier',
+                    company: 'BMCE Bank',
+                    duration: 'Juillet 2023 - Septembre 2023',
+                    description: 'Analyse des risques de crédit, préparation de rapports financiers, assistance dans l\'évaluation des projets d\'investissement.'
+                },
+                {
+                    title: 'Stagiaire en comptabilité',
+                    company: 'Deloitte Maroc',
+                    duration: 'Juillet 2022 - Août 2022',
+                    description: 'Vérification des états financiers, assistance dans l\'audit interne, préparation des déclarations fiscales.'
+                },
+                {
+                    title: 'Président du Club Finance',
+                    company: 'ISCAE',
+                    duration: 'Septembre 2022 - Présent',
+                    description: 'Organisation de conférences, ateliers et compétitions de finance pour les étudiants de l\'ISCAE.'
+                }
+            ]
         };
 
-        // The JavaScript for login, profile display, etc., remains the same.
-        // The function to initiate the real LinkedIn login becomes:
-        function loginWithLinkedInReal() {
-            // Construct the OAuth 2.0 authorization URL [citation:10]
-            const state = 'iscae_state_' + Math.random().toString(36).substring(7);
-            localStorage.setItem('linkedin_oauth_state', state);
+        // ÉLÉMENTS DU DOM
+        const loginCard = document.getElementById('loginCard');
+        const profileSection = document.getElementById('profileSection');
+        const linkedinLoginBtn = document.getElementById('linkedinLoginBtn');
+        const loginLoader = document.getElementById('loginLoader');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const updateProfileBtn = document.getElementById('updateProfileBtn');
+        const syncWithISCAE = document.getElementById('syncWithISCAE');
+        const syncStatus = document.getElementById('syncStatus');
+        
+        const userInitial = document.getElementById('userInitial');
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const fullName = document.getElementById('fullName');
+        const profilePicture = document.getElementById('profilePicture');
+        const headline = document.getElementById('headline');
+        const locationElement = document.getElementById('location');
+        const skillsContainer = document.getElementById('skillsContainer');
+        const experienceContainer = document.getElementById('experienceContainer');
+
+        // FONCTION PRINCIPALE DE CONNEXION (DÉMO)
+        function loginWithLinkedIn() {
+            loginLoader.style.display = 'block';
+            linkedinLoginBtn.style.display = 'none';
             
-            const authUrl = `${LINKEDIN_CONFIG.authUrl}?response_type=code&client_id=${LINKEDIN_CONFIG.clientId}&redirect_uri=${encodeURIComponent(LINKEDIN_CONFIG.redirectUri)}&state=${state}&scope=${encodeURIComponent(LINKEDIN_CONFIG.scope)}`;
-            
-            // Redirect the user to LinkedIn for authentication
-            window.location.href = authUrl;
+            // Simulation d'un appel API (2 secondes)
+            setTimeout(() => {
+                loginLoader.style.display = 'none';
+                showProfile(DEMO_PROFILE);
+                showNotification('Connexion réussie avec les données de démonstration !', 'success');
+            }, 2000);
         }
 
-        // Modify the login button in your HTML to call this new function
-        // linkedinLoginBtn.addEventListener('click', loginWithLinkedInReal);
+        // AFFICHER LE PROFIL
+        function showProfile(userData) {
+            loginCard.style.display = 'none';
+            profileSection.style.display = 'block';
+            
+            // Mettre à jour l'en-tête
+            const initials = (userData.firstName[0] + userData.lastName[0]).toUpperCase();
+            userInitial.textContent = initials;
+            userName.textContent = `${userData.firstName} ${userData.lastName}`;
+            userRole.textContent = 'Étudiant ISCAE - Connecté (Démo)';
+            
+            // Mettre à jour le profil principal
+            fullName.textContent = `${userData.firstName} ${userData.lastName}`;
+            profilePicture.src = userData.profilePicture;
+            headline.textContent = userData.headline;
+            locationElement.textContent = userData.location;
+            
+            // Afficher les compétences
+            skillsContainer.innerHTML = '';
+            userData.skills.forEach(skill => {
+                const skillElement = document.createElement('div');
+                skillElement.className = 'skill-tag';
+                skillElement.textContent = skill;
+                skillsContainer.appendChild(skillElement);
+            });
+            
+            // Afficher les expériences
+            experienceContainer.innerHTML = '';
+            userData.experiences.forEach(exp => {
+                const expElement = document.createElement('div');
+                expElement.className = 'experience-item';
+                expElement.innerHTML = `
+                    <div class="experience-title">${exp.title}</div>
+                    <div class="experience-company">
+                        <i class="fas fa-building"></i>
+                        ${exp.company}
+                    </div>
+                    <div class="experience-duration">
+                        <i class="far fa-calendar-alt"></i>
+                        ${exp.duration}
+                    </div>
+                    <div class="experience-description">${exp.description}</div>
+                `;
+                experienceContainer.appendChild(expElement);
+            });
+        }
+
+        // DÉCONNEXION
+        function logout() {
+            loginCard.style.display = 'block';
+            profileSection.style.display = 'none';
+            linkedinLoginBtn.style.display = 'inline-flex';
+            
+            // Réinitialiser l'en-tête
+            userInitial.textContent = '?';
+            userName.textContent = 'Non connecté';
+            userRole.textContent = 'Connectez-vous avec LinkedIn';
+            
+            showNotification('Déconnexion réussie.', 'info');
+        }
+
+        // SYNCHRONISER AVEC ISCAE (SIMULATION)
+        function syncWithISCAEDatabase() {
+            syncStatus.style.display = 'block';
+            syncStatus.style.backgroundColor = '#e6f0ff';
+            syncStatus.style.color = 'var(--iscae-blue)';
+            syncStatus.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Synchronisation avec la base de données ISCAE en cours...';
+            
+            // Simulation (2 secondes)
+            setTimeout(() => {
+                syncStatus.style.backgroundColor = '#c6f6d5';
+                syncStatus.style.color = '#22543d';
+                syncStatus.innerHTML = '<i class="fas fa-check-circle"></i> Synchronisation réussie ! Votre profil a été intégré à la base ISCAE.';
+                showNotification('Profil synchronisé avec succès !', 'success');
+            }, 2000);
+        }
+
+        // NOTIFICATIONS
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            if (type === 'success') notification.style.backgroundColor = '#38a169';
+            else if (type === 'error') notification.style.backgroundColor = '#e53e3e';
+            else notification.style.backgroundColor = 'var(--iscae-blue)';
+            
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${message}`;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 5000);
+            
+            // Ajouter les animations si nécessaire
+            if (!document.getElementById('notificationStyles')) {
+                const style = document.createElement('style');
+                style.id = 'notificationStyles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // ÉVÉNEMENTS
+        linkedinLoginBtn.addEventListener('click', loginWithLinkedIn);
+        disconnectBtn.addEventListener('click', logout);
+        
+        updateProfileBtn.addEventListener('click', () => {
+            showNotification('Mise à jour du profil depuis LinkedIn...', 'info');
+            setTimeout(() => {
+                showNotification('Profil mis à jour avec succès !', 'success');
+            }, 1500);
+        });
+        
+        syncWithISCAE.addEventListener('click', syncWithISCAEDatabase);
+        
+        document.getElementById('viewProfileBtn').addEventListener('click', () => {
+            showNotification('Ouverture de votre profil ISCAE...', 'info');
+            setTimeout(() => {
+                alert('Fonctionnalité à implémenter :\nVotre profil ISCAE complet avec toutes vos informations académiques et professionnelles sera affiché ici.');
+            }, 500);
+        });
+
+        // VÉRIFIER SI ON REVIENT D'UNE AUTH LINKEDIN RÉELLE
+        function checkForRealLinkedInCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const authCode = urlParams.get('code');
+            
+            if (authCode) {
+                console.log('Code d\'autorisation LinkedIn reçu :', authCode);
+                showNotification('Connexion LinkedIn détectée ! Mode démo activé.', 'info');
+                // Nettoyer l'URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        // INITIALISATION
+        document.addEventListener('DOMContentLoaded', checkForRealLinkedInCallback);
     </script>
 </body>
 </html>
