@@ -354,6 +354,21 @@
             opacity: 1;
         }
 
+        .demo-notice {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            color: #856404;
+            font-size: 0.9rem;
+        }
+
+        .demo-notice a {
+            color: var(--linkedin-blue);
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -418,10 +433,10 @@
             
             <div class="loader" id="loginLoader"></div>
             
-            <div style="margin-top: 2rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
-                <p style="font-size: 0.9rem; color: #666; margin: 0;">
-                    <i class="fas fa-shield-alt"></i> <strong>Mode Démo Activé :</strong> Cliquez sur le bouton pour voir une simulation complète de l'interface avec des données de démonstration. Pour une connexion réelle à l'API LinkedIn, un backend supplémentaire est requis.
-                </p>
+            <div class="demo-notice">
+                <p><i class="fas fa-info-circle"></i> <strong>Mode Test LinkedIn Actif</strong></p>
+                <p>Le bouton vous redirigera vers le site officiel de LinkedIn pour une authentification réelle. Après autorisation, vous verrez un code dans la console (F12). Pour afficher votre vrai profil, une étape backend supplémentaire est nécessaire.</p>
+                <p><a href="#" id="demoModeLink">👉 Cliquez ici pour utiliser le mode démonstration instantané</a></p>
             </div>
         </div>
 
@@ -488,7 +503,7 @@
     <footer>
         <div class="footer-content">
             <div class="copyright">
-                &copy; 2024 ISCAE - Synchronisation LinkedIn (Version de démonstration).
+                &copy; 2024 ISCAE - Synchronisation LinkedIn (Test OAuth Réel).
             </div>
             <div class="footer-links">
                 <a href="#">Confidentialité</a>
@@ -500,7 +515,7 @@
     </footer>
 
     <script>
-        // DONNÉES DE DÉMONSTRATION
+        // DONNÉES DE DÉMONSTRATION (pour le mode demo)
         const DEMO_PROFILE = {
             id: 'demo-user-12345',
             firstName: 'Ahmed',
@@ -540,6 +555,7 @@
         const updateProfileBtn = document.getElementById('updateProfileBtn');
         const syncWithISCAE = document.getElementById('syncWithISCAE');
         const syncStatus = document.getElementById('syncStatus');
+        const demoModeLink = document.getElementById('demoModeLink');
         
         const userInitial = document.getElementById('userInitial');
         const userName = document.getElementById('userName');
@@ -551,8 +567,34 @@
         const skillsContainer = document.getElementById('skillsContainer');
         const experienceContainer = document.getElementById('experienceContainer');
 
-        // FONCTION PRINCIPALE DE CONNEXION (DÉMO)
-        function loginWithLinkedIn() {
+        // ==================== FONCTION RÉELLE LINKEDIN ====================
+        function loginWithLinkedInReal() {
+            // CONFIGURATION RÉELLE AVEC VOS IDENTIFIANTS
+            const LINKEDIN_CONFIG = {
+                clientId: '78s9n6o52y1sq3', // ⬅️ VOTRE CLIENT ID
+                redirectUri: 'https://zaynepp.github.io/iscae-privacy-policy/linkedin-callback.html', // ⬅️ VOTRE URL CALLBACK
+                scope: 'r_liteprofile r_emailaddress', // Permissions de base
+                state: 'iscae_' + Math.random().toString(36).substring(7) // Sécurité
+            };
+            
+            // Montrer le loader
+            loginLoader.style.display = 'block';
+            linkedinLoginBtn.style.display = 'none';
+            
+            // Construire l'URL d'autorisation LinkedIn OFFICIELLE
+            const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CONFIG.clientId}&redirect_uri=${encodeURIComponent(LINKEDIN_CONFIG.redirectUri)}&state=${LINKEDIN_CONFIG.state}&scope=${encodeURIComponent(LINKEDIN_CONFIG.scope)}`;
+            
+            console.log('🚀 Redirection vers LinkedIn OAuth...');
+            console.log('URL:', authUrl);
+            
+            // Rediriger l'utilisateur vers LinkedIn (cela quitte votre page)
+            setTimeout(() => {
+                window.location.href = authUrl;
+            }, 800);
+        }
+
+        // ==================== FONCTION DÉMONSTRATION ====================
+        function loginWithLinkedInDemo() {
             loginLoader.style.display = 'block';
             linkedinLoginBtn.style.display = 'none';
             
@@ -560,11 +602,11 @@
             setTimeout(() => {
                 loginLoader.style.display = 'none';
                 showProfile(DEMO_PROFILE);
-                showNotification('Connexion réussie avec les données de démonstration !', 'success');
+                showNotification('✅ Mode démonstration activé ! Données fictives affichées.', 'success');
             }, 2000);
         }
 
-        // AFFICHER LE PROFIL
+        // ==================== AFFICHER LE PROFIL ====================
         function showProfile(userData) {
             loginCard.style.display = 'none';
             profileSection.style.display = 'block';
@@ -611,7 +653,7 @@
             });
         }
 
-        // DÉCONNEXION
+        // ==================== DÉCONNEXION ====================
         function logout() {
             loginCard.style.display = 'block';
             profileSection.style.display = 'none';
@@ -625,7 +667,7 @@
             showNotification('Déconnexion réussie.', 'info');
         }
 
-        // SYNCHRONISER AVEC ISCAE (SIMULATION)
+        // ==================== SYNCHRONISER AVEC ISCAE ====================
         function syncWithISCAEDatabase() {
             syncStatus.style.display = 'block';
             syncStatus.style.backgroundColor = '#e6f0ff';
@@ -641,7 +683,7 @@
             }, 2000);
         }
 
-        // NOTIFICATIONS
+        // ==================== NOTIFICATIONS ====================
         function showNotification(message, type) {
             const notification = document.createElement('div');
             notification.style.cssText = `
@@ -688,8 +730,17 @@
             }
         }
 
-        // ÉVÉNEMENTS
-        linkedinLoginBtn.addEventListener('click', loginWithLinkedIn);
+        // ==================== ÉVÉNEMENTS ====================
+        
+        // BOUTON PRINCIPAL : déclenche la VRAIE connexion LinkedIn
+        linkedinLoginBtn.addEventListener('click', loginWithLinkedInReal);
+        
+        // LIEN "Mode démo" : déclenche la simulation
+        demoModeLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginWithLinkedInDemo();
+        });
+        
         disconnectBtn.addEventListener('click', logout);
         
         updateProfileBtn.addEventListener('click', () => {
@@ -708,20 +759,28 @@
             }, 500);
         });
 
-        // VÉRIFIER SI ON REVIENT D'UNE AUTH LINKEDIN RÉELLE
+        // ==================== VÉRIFIER SI ON REVIENT D'UNE AUTH LINKEDIN RÉELLE ====================
         function checkForRealLinkedInCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const authCode = urlParams.get('code');
             
             if (authCode) {
-                console.log('Code d\'autorisation LinkedIn reçu :', authCode);
-                showNotification('Connexion LinkedIn détectée ! Mode démo activé.', 'info');
-                // Nettoyer l'URL
+                console.log('✅ Code d\'autorisation LinkedIn REÇU dans index.html :', authCode);
+                showNotification('Code LinkedIn reçu ! (Voir console F12). Le profil réel nécessite un backend.', 'info');
+                
+                // Nettoyer l'URL pour enlever le code
                 window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // Option : on peut automatiquement passer en mode demo après
+                setTimeout(() => {
+                    if(confirm('Code LinkedIn reçu avec succès !\n\nPour voir votre vrai profil, un backend est nécessaire.\nVoulez-vous charger la démonstration à la place ?')) {
+                        loginWithLinkedInDemo();
+                    }
+                }, 1000);
             }
         }
 
-        // INITIALISATION
+        // ==================== INITIALISATION ====================
         document.addEventListener('DOMContentLoaded', checkForRealLinkedInCallback);
     </script>
 </body>
